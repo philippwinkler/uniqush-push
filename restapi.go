@@ -20,8 +20,8 @@ package main
 import (
 	"fmt"
 	"github.com/nu7hatch/gouuid"
+	. "github.com/philippwinkler/uniqush-push/push"
 	"github.com/uniqush/log"
-	. "github.com/uniqush/uniqush-push/push"
 	"io"
 	"net/http"
 	"regexp"

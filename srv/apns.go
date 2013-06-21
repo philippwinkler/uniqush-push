@@ -25,8 +25,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	. "github.com/philippwinkler/uniqush-push/push"
 	"github.com/uniqush/cache"
-	. "github.com/uniqush/uniqush-push/push"
 	"io"
 	"net"
 	"strconv"
@@ -160,12 +160,11 @@ func parseList(str string) []string {
 
 func toAPNSPayload(n *Notification) ([]byte, error) {
 	payload := make(map[string]interface{})
-	aps := make(map[string]interface{})
 	alert := make(map[string]interface{})
 	for k, v := range n.Data {
 		switch k {
 		case "msg":
-			alert["body"] = v
+			alert["alert"] = v
 		case "action-loc-key":
 			alert[k] = v
 		case "loc-key":
@@ -177,10 +176,10 @@ func toAPNSPayload(n *Notification) ([]byte, error) {
 			if err != nil {
 				continue
 			} else {
-				aps["badge"] = b
+				alert["badge"] = b
 			}
 		case "sound":
-			aps["sound"] = v
+			alert["sound"] = v
 		case "img":
 			alert["launch-image"] = v
 		case "id":
@@ -194,8 +193,7 @@ func toAPNSPayload(n *Notification) ([]byte, error) {
 		}
 	}
 
-	aps["alert"] = alert
-	payload["aps"] = aps
+	payload["aps"] = alert
 	j, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
